@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXIST "users" (
   "enabled" smallint DEFAULT '1',
   CONSTRAINT "unique_username" UNIQUE ("Username")
 );
-INSERT INTO "users" ("Username", "Password", "CustomerID", "enabled") VALUES 
+INSERT INTO "users" ("Username", "Password", "CustomerID", "enabled") VALUES
 ('john.doe@example.com', '$2a$10$JXoEVcNopNsKHCBa2KGQgOKr0onI9HL3DM3tCHWT1KsPSUqQo2eKC', 1, 1),
 ('admin', '$2a$10$FRni.zsYYsAUmnShyksucOpl5KKiy6qAcaCaoEYE7Cz.yePhnVMpu', NULL, 1),
 ('lov3u4ev3r97@gmail.com', '$2a$10$dbPJE6iB9w82vZnldAVSduGp8KuOSzNhBzVXMlm5oPrOCGW4pjXmi', 4, 1),
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXIST "authorities" (
   CONSTRAINT "fk_authorities_users" FOREIGN KEY ("username") REFERENCES "users" ("Username")
 );
 
-INSERT INTO "authorities" ("username", "authority") VALUES 
+INSERT INTO "authorities" ("username", "authority") VALUES
 ('admin', 'ROLE_ADMIN'),
 ('john.doe@example.com', 'ROLE_CUSTOMER'),
 ('lov3u4ev3r97@gmail.com', 'ROLE_CUSTOMER'),
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXIST "brands" (
   "BrandName" varchar(255) NOT NULL
 );
 
-INSERT INTO "brands" ("BrandID", "BrandName") VALUES 
+INSERT INTO "brands" ("BrandID", "BrandName") VALUES
 (1, 'Samsung'),
 (2, 'Apple'),
 (3, 'Huawei'),
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXIST "categories" (
   "CategoryName" varchar(255) NOT NULL
 );
 
-INSERT INTO "categories" ("CategoryID","CategoryName") VALUES 
+INSERT INTO "categories" ("CategoryID","CategoryName") VALUES
 (1, 'Smartphones'),
 (2, 'Tablets'),
 (3, 'Accessories'),
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXIST "phones" (
   CONSTRAINT "FK_Phones_Brands" FOREIGN KEY ("BrandID") REFERENCES "brands" ("BrandID"),
   CONSTRAINT "FK_Phones_Categories" FOREIGN KEY ("CategoryID") REFERENCES "categories" ("CategoryID")
 );
-INSERT INTO phones ("PhoneID", "BrandID", "CategoryID", "Model", "PhoneName", "ReleaseYear", "ScreenSize", "StorageCapacity", "RAM", "OperatingSystem", "Price", "Color", "ImageName", "quantity", "seri") VALUES 
+INSERT INTO phones ("PhoneID", "BrandID", "CategoryID", "Model", "PhoneName", "ReleaseYear", "ScreenSize", "StorageCapacity", "RAM", "OperatingSystem", "Price", "Color", "ImageName", "quantity", "seri") VALUES
 (126, 2, 1, 'iphone 14', 'iphone 14-2022-128-8-Black', 2022, 6.30, 128, 8, 'IOS', 799.00, 'Black', 'iphone 14 black.png', 0, '[]'),
 (127, 1, 2, 'Samsung Galaxy S20', 'Samsung Galaxy S20-2020-256-8-Blue', 2020, 6.20, 256, 8, 'Android', 699.00, 'Blue', 'Samsung Galaxy Note 20 Mystic Bronze.png', 1, '[112569965]'),
 (128, 3, 1, 'OnePlus 9', 'OnePlus 9-2021-128-8-White', 2021, 6.50, 128, 8, 'Android', 699.00, 'White', 'oneplus 9-white.png', 0, '[]'),
@@ -138,7 +138,7 @@ INSERT INTO phones ("PhoneID", "BrandID", "CategoryID", "Model", "PhoneName", "R
 (157, 2, 1, 'iPhone 15', 'iPhone 15-1890-64-3-Pink', 1890, 6.30, 64, 3, 'IOS', 799.00, 'Pink', 'iphone-15-pink.png', 2, '[555555555, 555555556]'),
 (173, 3, 1, 'Huawie nova i5', 'Huawie nova i5-2021-256-8-Blue', 2021, 6.40, 256, 8, 'Android', 1299.00, 'Blue', '1248279-copy.jpg', 1, '[459997002]');
 
--- INSERT INTO "phones" ("BrandID", "CategoryID", "PhoneName", "Model", "ReleaseYear", "ScreenSize", "StorageCapacity", "RAM", "OperatingSystem", "Price", "Color", "ImageName", "quantity", "seri") VALUES 
+-- INSERT INTO "phones" ("BrandID", "CategoryID", "PhoneName", "Model", "ReleaseYear", "ScreenSize", "StorageCapacity", "RAM", "OperatingSystem", "Price", "Color", "ImageName", "quantity", "seri") VALUES
 -- (2, 1, 'iphone 14', 'iphone 14-2022-128-8-Black', 2022, 6.30, 128, 8, 'IOS', 799.00, 'Black', 'iphone 14 black.png', 0, '[]'),
 -- (1, 2, 'Samsung Galaxy S20', 'Samsung Galaxy S20-2020-256-8-Blue', 2020, 6.20, 256, 8, 'Android', 699.00, 'Blue', 'Samsung Galaxy Note 20 Mystic Bronze.png', 1, '[112569965]'),
 -- (3, 1, 'OnePlus 9', 'OnePlus 9-2021-128-8-White', 2021, 6.50, 128, 8, 'Android', 699.00, 'White', 'oneplus 9-white.png', 0, '[]'),
@@ -186,7 +186,7 @@ CREATE TABLE IF NOT EXIST "customers" (
   "registration_date" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO "customers" ("CustomerID", "FirstName", "LastName", "Email", "Phone", "Pass", "Address", "registration_date") VALUES 
+INSERT INTO "customers" ("CustomerID", "FirstName", "LastName", "Email", "Phone", "Pass", "Address", "registration_date") VALUES
 (1, 'Johny', 'Doe', 'john.doe@example.com', '888-444-210-791', '123456', '123 Main St', '2023-09-27 09:13:51'),
 (2, 'Jane', 'Smith', 'jane.smith@example.com', '987-654-3210', '123456', '456 Elm St', '2023-09-27 09:13:56'),
 (3, 'Bob', 'Johnson', 'bob.johnson@example.com', '555-555-5555', '123456', '789 Oak St', '2023-09-27 09:13:57'),
@@ -210,7 +210,7 @@ CREATE TABLE IF NOT EXIST "employees" (
   "HireDate" timestamp
 );
 
-INSERT INTO "employees" ("EmployeeID", "FirstName", "LastName", "Email", "Phone", "Pass", "HireDate") VALUES 
+INSERT INTO "employees" ("EmployeeID", "FirstName", "LastName", "Email", "Phone", "Pass", "HireDate") VALUES
 (1, 'Michael', 'Johnson', 'michael.johnson@example.com', '111-111-1112', '123', '2020-01-14 17:00:00'),
 (2, 'Emily', 'Williams', 'emily.williams@example.com', '222-222-2222', '123', '2021-03-19 17:00:00'),
 (3, 'David', 'Smith', 'david.smith@example.com', '333-333-3333', '123', '2022-05-09 17:00:00'),
@@ -224,7 +224,7 @@ CREATE TABLE IF NOT EXIST "paymentmethods" (
   "MethodName" varchar(255) NOT NULL
 );
 
-INSERT INTO "paymentmethods" ("PaymentMethodID","MethodName") VALUES 
+INSERT INTO "paymentmethods" ("PaymentMethodID","MethodName") VALUES
 (1, 'Cash'),
 (2, 'Credit'),
 (3, 'Debit'),
@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXIST "productreviews" (
   CONSTRAINT "fk_productreviews_customers" FOREIGN KEY ("CustomerID") REFERENCES "customers" ("CustomerID")
 );
 
-INSERT INTO "productreviews" ("ReviewID","PhoneID", "CustomerID", "Rating", "Comment", "ReviewDate") VALUES 
+INSERT INTO "productreviews" ("ReviewID","PhoneID", "CustomerID", "Rating", "Comment", "ReviewDate") VALUES
 (2, 127, 17, 5, 'helooo test', '2023-11-29 15:06:38'),
 (3, 127, 5, 5, 'test tiếp', '2023-11-29 15:31:22'),
 (7, 142, 18, 5, 'Điện thoại đẹp lắm! ủng hộ shop', '2023-11-29 16:07:57'),
@@ -293,7 +293,7 @@ CREATE TABLE IF NOT EXIST IF NOT EXISTS orders (
 
 -- Inserting data for table orders
 INSERT INTO orders ("OrderID", "CustomerID", "OrderDate", "dateprocessed", "PaymentMethodID", "Amount", "NumberOrAddressPayment", "CVV", "ExpirationDate", "EmployeeID")
-VALUES 
+VALUES
   (43, 17, '2023-10-18 23:50:05'::TIMESTAMPTZ, '2023-10-19 09:43:16'::TIMESTAMPTZ, 1, 2996.00, '', '', '', 9),
   (44, 5, '2023-10-19 02:04:05'::TIMESTAMPTZ, '2023-10-20 06:55:51'::TIMESTAMPTZ, 1, 1398.00, '', '', '', 9),
   (45, 20, '2023-10-25 02:58:25'::TIMESTAMPTZ, NULL, 1, 699.00, '', '', '', NULL),
@@ -310,7 +310,7 @@ CREATE TABLE IF NOT EXIST IF NOT EXISTS ordersimport (
 
 -- Inserting data for table ordersimport
 INSERT INTO ordersimport ("OrderImportID", "EmployeeID", "OrderDateImport", "Amount")
-VALUES 
+VALUES
   (43, 9, '2023-10-18 23:50:05'::TIMESTAMPTZ, 2996.00),
   (44, 9, '2023-10-19 02:04:05'::TIMESTAMPTZ, 1398.00),
   (45, NULL, '2023-10-25 02:58:25'::TIMESTAMPTZ, 699.00),
@@ -331,7 +331,7 @@ CREATE TABLE IF NOT EXIST IF NOT EXISTS orderitems (
 
 -- Inserting data for table orderitems
 INSERT INTO orderitems ("OrderItemID", "OrderID", "PhoneID", "Quantity", "seri", "price", "missing")
-VALUES 
+VALUES
   (77, 43, 128, 2, '[864209753, 112233445]', 699.00, 0),
   (78, 43, 126, 2, '[157482936, 294785613]', 799.00, 0),
   (79, 44, 128, 2, '[864209756, 112233446]', 699.00, 0),
@@ -352,7 +352,7 @@ CREATE TABLE IF NOT EXIST IF NOT EXISTS orderitemsimport (
 
 -- Inserting data for table orderitemsimport
 INSERT INTO orderitemsimport ("OrderItemImportID", "OrderImportID", "PhoneID", "Quantity", "seri", "priceImport")
-VALUES 
+VALUES
   (77, 43, 128, 2, '[864209753, 112233445]', 699.00),
   (78, 43, 126, 2, '[157482936, 294785613]', 799.00),
   (79, 44, 128, 2, '[864209756, 112233446]', 699.00),

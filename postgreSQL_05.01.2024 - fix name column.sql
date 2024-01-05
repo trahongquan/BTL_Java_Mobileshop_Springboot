@@ -1,13 +1,173 @@
-
-CREATE TABLE IF NOT EXIST "users" (
-  "UserAccountID" SERIAL PRIMARY KEY,
-  "Username" varchar(255) NOT NULL,
-  "Password" varchar(255) NOT NULL,
-  "CustomerID" integer,
-  "enabled" smallint DEFAULT '1',
-  CONSTRAINT "unique_username" UNIQUE ("Username")
+-- Table structure for table `users`
+CREATE TABLE IF NOT EXISTS users (
+  useraccountid SERIAL PRIMARY KEY,
+  username varchar(255) NOT NULL,
+  password varchar(255) NOT NULL,
+  customerid integer,
+  enabled smallint DEFAULT '1',
+  CONSTRAINT unique_username UNIQUE (username)
 );
-INSERT INTO "users" ("Username", "Password", "CustomerID", "enabled") VALUES 
+
+-- Table structure for table `authorities`
+CREATE TABLE IF NOT EXISTS authorities (
+  id serial PRIMARY KEY,
+  username varchar(50) NOT NULL,
+  authority varchar(50) NOT NULL,
+  CONSTRAINT fk_authorities_users FOREIGN KEY (username) REFERENCES users (username)
+);
+
+-- Table structure for table `brands`
+CREATE TABLE IF NOT EXISTS brands (
+  brandid serial PRIMARY KEY,
+  brandname varchar(255) NOT NULL
+);
+
+INSERT INTO brands (brandid, brandname) VALUES 
+(1, 'Samsung'),
+(2, 'Apple'),
+(3, 'Huawei'),
+(4, 'Google Pixel'),
+(5, 'OnePlus'),
+(13, 'Nokia');
+
+-- Table structure for table `categories`
+CREATE TABLE IF NOT EXISTS categories (
+  categoryid serial PRIMARY KEY,
+  categoryname varchar(255) NOT NULL
+);
+
+INSERT INTO categories (categoryid, categoryname) VALUES 
+(1, 'Smartphones'),
+(2, 'Tablets'),
+(3, 'Accessories'),
+(4, 'Laptop'),
+(6, 'PC');
+
+-- Table structure for table `phones`
+CREATE TABLE IF NOT EXISTS phones (
+  phoneid serial PRIMARY KEY,
+  brandid int,
+  categoryid int,
+  phonename varchar(255),
+  model varchar(255),
+  releaseyear int,
+  screensize numeric(4,2),
+  storagecapacity int,
+  ram int,
+  operatingsystem varchar(50),
+  price varchar(255),
+  color varchar(50),
+  imagename varchar(255),
+  quantity int,
+  seri varchar(10000),
+  CONSTRAINT FK_phones_brands FOREIGN KEY (brandid) REFERENCES brands (brandid),
+  CONSTRAINT FK_phones_categories FOREIGN KEY (categoryid) REFERENCES categories (categoryid)
+);
+
+-- Table structure for table `customers`
+CREATE TABLE IF NOT EXISTS customers (
+  customerid serial PRIMARY KEY,
+  firstname varchar(255),
+  lastname varchar(255),
+  email varchar(255) NOT NULL,
+  phone varchar(20) NOT NULL,
+  pass varchar(50) NOT NULL,
+  address varchar(500) NOT NULL,
+  registration_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table structure for table `employees`
+CREATE TABLE IF NOT EXISTS employees (
+  employeeid serial PRIMARY KEY,
+  firstname varchar(255),
+  lastname varchar(255),
+  email varchar(255) NOT NULL,
+  phone varchar(20),
+  pass varchar(50) NOT NULL,
+  hiredate timestamp
+);
+
+-- Table structure for table `paymentmethods`
+CREATE TABLE IF NOT EXISTS paymentmethods (
+  paymentmethodid serial PRIMARY KEY,
+  methodname varchar(255) NOT NULL
+);
+
+-- Table structure for table `productreviews`
+CREATE TABLE IF NOT EXISTS productreviews (
+  reviewid serial PRIMARY KEY,
+  phoneid int,
+  customerid int,
+  rating int NOT NULL,
+  comment varchar(1000),
+  reviewdate timestamp NOT NULL,
+  CONSTRAINT fk_productreviews_phones FOREIGN KEY (phoneid) REFERENCES phones (phoneid),
+  CONSTRAINT fk_productreviews_customers FOREIGN KEY (customerid) REFERENCES customers (customerid)
+);
+
+-- Table structure for table `wish`
+CREATE TABLE IF NOT EXISTS wish (
+  whisid serial NOT NULL,
+  customerid int NOT NULL,
+  phoneid int NOT NULL,
+  quantity int NOT NULL,
+  PRIMARY KEY (whisid),
+  CONSTRAINT fk_wish_customers FOREIGN KEY (customerid) REFERENCES customers (customerid)
+);
+
+-- Table structure for table `orders`
+CREATE TABLE IF NOT EXISTS orders (
+  orderid SERIAL PRIMARY KEY,
+  customerid INT,
+  orderdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  dateprocessed TIMESTAMPTZ,
+  paymentmethodid INT NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  numberoraddresspayment VARCHAR(255) NOT NULL,
+  cvv VARCHAR(10),
+  expirationdate VARCHAR(10),
+  employeeid INT,
+  FOREIGN KEY (employeeid) REFERENCES employees (employeeid),
+  FOREIGN KEY (paymentmethodid) REFERENCES paymentmethods (paymentmethodid),
+  FOREIGN KEY (customerid) REFERENCES customers (customerid)
+);
+
+-- Table structure for table `ordersimport`
+CREATE TABLE IF NOT EXISTS ordersimport (
+  orderimportid SERIAL PRIMARY KEY,
+  employeeid INT,
+  orderdateimport TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  amount DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (employeeid) REFERENCES employees (employeeid)
+);
+
+-- Table structure for table `orderitems`
+CREATE TABLE IF NOT EXISTS orderitems (
+  orderitemid SERIAL PRIMARY KEY,
+  orderid INT,
+  phoneid INT,
+  quantity INT,
+  seri VARCHAR(255),
+  price DECIMAL(10,2),
+  missing INT,
+  FOREIGN KEY (orderid) REFERENCES orders (orderid) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  FOREIGN KEY (phoneid) REFERENCES phones (phoneid) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+-- Table structure for table `orderitemsimport`
+CREATE TABLE IF NOT EXISTS orderitemsimport (
+  orderitemimportid SERIAL PRIMARY KEY,
+  orderimportid INT,
+  phoneid INT,
+  quantity INT,
+  seri VARCHAR(255),
+  priceimport DECIMAL(10,2),
+  FOREIGN KEY (orderimportid) REFERENCES ordersimport (orderimportid) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  FOREIGN KEY (phoneid) REFERENCES phones (phoneid) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+
+INSERT INTO users (username, password, customerid, enabled) VALUES 
 ('john.doe@example.com', '$2a$10$JXoEVcNopNsKHCBa2KGQgOKr0onI9HL3DM3tCHWT1KsPSUqQo2eKC', 1, 1),
 ('admin', '$2a$10$FRni.zsYYsAUmnShyksucOpl5KKiy6qAcaCaoEYE7Cz.yePhnVMpu', NULL, 1),
 ('lov3u4ev3r97@gmail.com', '$2a$10$dbPJE6iB9w82vZnldAVSduGp8KuOSzNhBzVXMlm5oPrOCGW4pjXmi', 4, 1),
@@ -26,14 +186,9 @@ INSERT INTO "users" ("Username", "Password", "CustomerID", "enabled") VALUES
 ('Nguyennam1999@gmail.com', '$2a$10$7UyhDKyqtJQrBUsG5BouneVbqYSTY0DU.9ns//hRGaRMQj0vgwDGi', 20, 1),
 ('vuthuy270896@gmail.com', '$2a$10$7lAfr0AMmYjXo/P5aAdcEeXXOiRBV3zpMb5zsARdfkfB5k8ZFS9qG', 22, 1);
 
-CREATE TABLE IF NOT EXIST "authorities" (
-  "id" serial PRIMARY KEY,
-  "username" varchar(50) NOT NULL,
-  "authority" varchar(50) NOT NULL,
-  CONSTRAINT "fk_authorities_users" FOREIGN KEY ("username") REFERENCES "users" ("Username")
-);
 
-INSERT INTO "authorities" ("username", "authority") VALUES 
+
+INSERT INTO authorities (username, authority) VALUES 
 ('admin', 'ROLE_ADMIN'),
 ('john.doe@example.com', 'ROLE_CUSTOMER'),
 ('lov3u4ev3r97@gmail.com', 'ROLE_CUSTOMER'),
@@ -53,58 +208,8 @@ INSERT INTO "authorities" ("username", "authority") VALUES
 ('vuthuy270896@gmail.com', 'ROLE_CUSTOMER');
 
 
--- Table structure for table `brands`
 
-CREATE TABLE IF NOT EXIST "brands" (
-  "BrandID" serial PRIMARY KEY,
-  "BrandName" varchar(255) NOT NULL
-);
-
-INSERT INTO "brands" ("BrandID", "BrandName") VALUES 
-(1, 'Samsung'),
-(2, 'Apple'),
-(3, 'Huawei'),
-(4, 'Google Pixel'),
-(5, 'OnePlus'),
-(13, 'Nokia');
-
--- Table structure for table `categories`
-
-CREATE TABLE IF NOT EXIST "categories" (
-  "CategoryID" serial PRIMARY KEY,
-  "CategoryName" varchar(255) NOT NULL
-);
-
-INSERT INTO "categories" ("CategoryID","CategoryName") VALUES 
-(1, 'Smartphones'),
-(2, 'Tablets'),
-(3, 'Accessories'),
-(4, 'Laptop'),
-(6, 'PC');
-
-
--- Table structure for table `phones`
-
-CREATE TABLE IF NOT EXIST "phones" (
-  "PhoneID" serial PRIMARY KEY,
-  "BrandID" int,
-  "CategoryID" int,
-  "PhoneName" varchar(255),
-  "Model" varchar(255),
-  "ReleaseYear" int,
-  "ScreenSize" numeric(4,2),
-  "StorageCapacity" int,
-  "RAM" int,
-  "OperatingSystem" varchar(50),
-  "Price" numeric(10,2),
-  "Color" varchar(50),
-  "ImageName" varchar(255),
-  "quantity" int,
-  "seri" varchar(10000),
-  CONSTRAINT "FK_Phones_Brands" FOREIGN KEY ("BrandID") REFERENCES "brands" ("BrandID"),
-  CONSTRAINT "FK_Phones_Categories" FOREIGN KEY ("CategoryID") REFERENCES "categories" ("CategoryID")
-);
-INSERT INTO phones ("PhoneID", "BrandID", "CategoryID", "Model", "PhoneName", "ReleaseYear", "ScreenSize", "StorageCapacity", "RAM", "OperatingSystem", "Price", "Color", "ImageName", "quantity", "seri") VALUES 
+INSERT INTO phones (phoneid, brandid, categoryid, model, phonename, releaseyear, screensize, storagecapacity, ram, operatingsystem, price, color, imagename, quantity, seri) VALUES
 (126, 2, 1, 'iphone 14', 'iphone 14-2022-128-8-Black', 2022, 6.30, 128, 8, 'IOS', 799.00, 'Black', 'iphone 14 black.png', 0, '[]'),
 (127, 1, 2, 'Samsung Galaxy S20', 'Samsung Galaxy S20-2020-256-8-Blue', 2020, 6.20, 256, 8, 'Android', 699.00, 'Blue', 'Samsung Galaxy Note 20 Mystic Bronze.png', 1, '[112569965]'),
 (128, 3, 1, 'OnePlus 9', 'OnePlus 9-2021-128-8-White', 2021, 6.50, 128, 8, 'Android', 699.00, 'White', 'oneplus 9-white.png', 0, '[]'),
@@ -174,19 +279,8 @@ INSERT INTO phones ("PhoneID", "BrandID", "CategoryID", "Model", "PhoneName", "R
 -- (2, 1, ' iPhone X', 'iPhone X-2020-64-4-Black', 2020, 6.10, 64, 4, 'IOS', 999.00, ' Black ', ' iphone.jpg', 1, '[459687412]');
 
 
--- Table structure for table `customers`
-CREATE TABLE IF NOT EXIST "customers" (
-  "CustomerID" serial PRIMARY KEY,
-  "FirstName" varchar(255),
-  "LastName" varchar(255),
-  "Email" varchar(255) NOT NULL,
-  "Phone" varchar(20) NOT NULL,
-  "Pass" varchar(50) NOT NULL,
-  "Address" varchar(500) NOT NULL,
-  "registration_date" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
 
-INSERT INTO "customers" ("CustomerID", "FirstName", "LastName", "Email", "Phone", "Pass", "Address", "registration_date") VALUES 
+INSERT INTO customers (customerid, firstname, lastname, email, phone, pass, address, registration_date) VALUES 
 (1, 'Johny', 'Doe', 'john.doe@example.com', '888-444-210-791', '123456', '123 Main St', '2023-09-27 09:13:51'),
 (2, 'Jane', 'Smith', 'jane.smith@example.com', '987-654-3210', '123456', '456 Elm St', '2023-09-27 09:13:56'),
 (3, 'Bob', 'Johnson', 'bob.johnson@example.com', '555-555-5555', '123456', '789 Oak St', '2023-09-27 09:13:57'),
@@ -199,18 +293,8 @@ INSERT INTO "customers" ("CustomerID", "FirstName", "LastName", "Email", "Phone"
 (20, 'Nguyen Nam', NULL, 'Nguyennam1999@gmail.com', '+84399036791', '0399036791', 'số 42, phan chu trinh, TP Vĩnh Yên, Vĩnh Phúc', '2023-10-25 02:58:25'),
 (22, 'Vu Thuy', NULL, 'vuthuy270896@gmail.com', '096635694', '123', 'minh khai, khai quang, tp vinh yen, vinh phuc', '2023-11-02 13:27:50');
 
--- Table structure for table `employees`
-CREATE TABLE IF NOT EXIST "employees" (
-  "EmployeeID" serial PRIMARY KEY,
-  "FirstName" varchar(255),
-  "LastName" varchar(255),
-  "Email" varchar(255) NOT NULL,
-  "Phone" varchar(20),
-  "Pass" varchar(50) NOT NULL,
-  "HireDate" timestamp
-);
 
-INSERT INTO "employees" ("EmployeeID", "FirstName", "LastName", "Email", "Phone", "Pass", "HireDate") VALUES 
+INSERT INTO employees (employeeid, firstname, lastname, email, phone, pass, hiredate) VALUES 
 (1, 'Michael', 'Johnson', 'michael.johnson@example.com', '111-111-1112', '123', '2020-01-14 17:00:00'),
 (2, 'Emily', 'Williams', 'emily.williams@example.com', '222-222-2222', '123', '2021-03-19 17:00:00'),
 (3, 'David', 'Smith', 'david.smith@example.com', '333-333-3333', '123', '2022-05-09 17:00:00'),
@@ -218,13 +302,8 @@ INSERT INTO "employees" ("EmployeeID", "FirstName", "LastName", "Email", "Phone"
 (8, 'huynh', 'nguyen', 'huynhnguyen@gmail.com', '063695456', '123', '2023-10-18 01:36:23'),
 (9, 'Quan', 'Tran', 'admin', NULL, '123', NULL);
 
--- Table structure for table `paymentmethods`
-CREATE TABLE IF NOT EXIST "paymentmethods" (
-  "PaymentMethodID" serial PRIMARY KEY,
-  "MethodName" varchar(255) NOT NULL
-);
 
-INSERT INTO "paymentmethods" ("PaymentMethodID","MethodName") VALUES 
+INSERT INTO paymentmethods (paymentmethodid, methodname) VALUES 
 (1, 'Cash'),
 (2, 'Credit'),
 (3, 'Debit'),
@@ -235,19 +314,8 @@ INSERT INTO "paymentmethods" ("PaymentMethodID","MethodName") VALUES
 (8, 'ApplePay'),
 (9, 'SamsungPay');
 
--- Table structure for table `productreviews`
-CREATE TABLE IF NOT EXIST "productreviews" (
-  "ReviewID" serial PRIMARY KEY,
-  "PhoneID" int,
-  "CustomerID" int,
-  "Rating" int NOT NULL,
-  "Comment" varchar(1000),
-  "ReviewDate" timestamp NOT NULL,
-  CONSTRAINT "fk_productreviews_phones" FOREIGN KEY ("PhoneID") REFERENCES "phones" ("PhoneID"),
-  CONSTRAINT "fk_productreviews_customers" FOREIGN KEY ("CustomerID") REFERENCES "customers" ("CustomerID")
-);
 
-INSERT INTO "productreviews" ("ReviewID","PhoneID", "CustomerID", "Rating", "Comment", "ReviewDate") VALUES 
+INSERT INTO productreviews (reviewid, phoneid, customerid, rating, comment, reviewdate) VALUES 
 (2, 127, 17, 5, 'helooo test', '2023-11-29 15:06:38'),
 (3, 127, 5, 5, 'test tiếp', '2023-11-29 15:31:22'),
 (7, 142, 18, 5, 'Điện thoại đẹp lắm! ủng hộ shop', '2023-11-29 16:07:57'),
@@ -261,76 +329,26 @@ INSERT INTO "productreviews" ("ReviewID","PhoneID", "CustomerID", "Rating", "Com
 (15, 137, 20, 5, 'Sai ảnh rồi', '2023-11-29 19:26:28'),
 (16, 142, 6, 5, 'Để sai hình ảnh r shop', '2023-12-12 10:43:19');
 
--- Table structure for table `wish`
-CREATE TABLE IF NOT EXIST "wish" (
-  "WhisID" serial NOT NULL,
-  "CustomerID" int NOT NULL,
-  "PhoneID" int NOT NULL,
-  "Quantity" int NOT NULL,
-  PRIMARY KEY ("WhisID"),
-  CONSTRAINT "fk_wish_customers" FOREIGN KEY ("CustomerID") REFERENCES "customers" ("CustomerID")
-);
-
--- No data provided for the "wish" table.
-
-
--- Table structure for table orders
-CREATE TABLE IF NOT EXIST IF NOT EXISTS orders (
-  "OrderID" SERIAL PRIMARY KEY,
-  "CustomerID" INT,
-  "OrderDate" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-  "dateprocessed" TIMESTAMPTZ,
-  "PaymentMethodID" INT NOT NULL,
-  "Amount" DECIMAL(10,2) NOT NULL,
-  "NumberOrAddressPayment" VARCHAR(255) NOT NULL,
-  "CVV" VARCHAR(10),
-  "ExpirationDate" VARCHAR(10),
-  "EmployeeID" INT,
-  FOREIGN KEY ("EmployeeID") REFERENCES employees ("EmployeeID"),
-  FOREIGN KEY ("PaymentMethodID") REFERENCES paymentmethods ("PaymentMethodID"),
-  FOREIGN KEY ("CustomerID") REFERENCES customers ("CustomerID")
-);
 
 -- Inserting data for table orders
-INSERT INTO orders ("OrderID", "CustomerID", "OrderDate", "dateprocessed", "PaymentMethodID", "Amount", "NumberOrAddressPayment", "CVV", "ExpirationDate", "EmployeeID")
-VALUES 
+INSERT INTO orders (orderid, customerid, orderdate, dateprocessed, paymentmethodid, amount, numberoraddresspayment, cvv, expirationdate, employeeid) VALUES 
   (43, 17, '2023-10-18 23:50:05'::TIMESTAMPTZ, '2023-10-19 09:43:16'::TIMESTAMPTZ, 1, 2996.00, '', '', '', 9),
   (44, 5, '2023-10-19 02:04:05'::TIMESTAMPTZ, '2023-10-20 06:55:51'::TIMESTAMPTZ, 1, 1398.00, '', '', '', 9),
   (45, 20, '2023-10-25 02:58:25'::TIMESTAMPTZ, NULL, 1, 699.00, '', '', '', NULL),
   (50, 22, '2023-11-02 13:27:50'::TIMESTAMPTZ, NULL, 1, 799.00, '', '', '', NULL);
 
--- Table structure for table ordersimport
-CREATE TABLE IF NOT EXIST IF NOT EXISTS ordersimport (
-  "OrderImportID" SERIAL PRIMARY KEY,
-  "EmployeeID" INT,
-  "OrderDateImport" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-  "Amount" DECIMAL(10,2) NOT NULL,
-  FOREIGN KEY ("EmployeeID") REFERENCES employees ("EmployeeID")
-);
 
 -- Inserting data for table ordersimport
-INSERT INTO ordersimport ("OrderImportID", "EmployeeID", "OrderDateImport", "Amount")
-VALUES 
+INSERT INTO ordersimport (orderimportid, employeeid, orderdateimport, amount)
+VALUES
   (43, 9, '2023-10-18 23:50:05'::TIMESTAMPTZ, 2996.00),
   (44, 9, '2023-10-19 02:04:05'::TIMESTAMPTZ, 1398.00),
   (45, NULL, '2023-10-25 02:58:25'::TIMESTAMPTZ, 699.00),
   (50, NULL, '2023-11-02 13:27:50'::TIMESTAMPTZ, 799.00);
 
--- Table structure for table orderitems
-CREATE TABLE IF NOT EXIST IF NOT EXISTS orderitems (
-  "OrderItemID" SERIAL PRIMARY KEY,
-  "OrderID" INT,
-  "PhoneID" INT,
-  "Quantity" INT,
-  "seri" VARCHAR(255),
-  "price" DECIMAL(10,2),
-  "missing" INT,
-  FOREIGN KEY ("OrderID") REFERENCES orders ("OrderID") ON DELETE NO ACTION ON UPDATE NO ACTION,
-  FOREIGN KEY ("PhoneID") REFERENCES phones ("PhoneID") ON DELETE NO ACTION ON UPDATE NO ACTION
-);
 
 -- Inserting data for table orderitems
-INSERT INTO orderitems ("OrderItemID", "OrderID", "PhoneID", "Quantity", "seri", "price", "missing")
+INSERT INTO orderitems (orderitemid, orderid, phoneid, quantity, seri, price, missing)
 VALUES 
   (77, 43, 128, 2, '[864209753, 112233445]', 699.00, 0),
   (78, 43, 126, 2, '[157482936, 294785613]', 799.00, 0),
@@ -338,20 +356,10 @@ VALUES
   (80, 45, 127, 3, '[753190642, 421087365, 975310864]', 699.00, 0),
   (85, 50, 130, 2, '[519873264, 872643091]', 799.00, 0);
 
--- Table structure for table orderitemsimport
-CREATE TABLE IF NOT EXIST IF NOT EXISTS orderitemsimport (
-  "OrderItemImportID" SERIAL PRIMARY KEY,
-  "OrderImportID" INT,
-  "PhoneID" INT,
-  "Quantity" INT,
-  "seri" VARCHAR(255),
-  "priceImport" DECIMAL(10,2),
-  FOREIGN KEY ("OrderImportID") REFERENCES ordersimport ("OrderImportID") ON DELETE NO ACTION ON UPDATE NO ACTION,
-  FOREIGN KEY ("PhoneID") REFERENCES phones ("PhoneID") ON DELETE NO ACTION ON UPDATE NO ACTION
-);
+
 
 -- Inserting data for table orderitemsimport
-INSERT INTO orderitemsimport ("OrderItemImportID", "OrderImportID", "PhoneID", "Quantity", "seri", "priceImport")
+INSERT INTO orderitemsimport (orderitemimportid, orderimportid, phoneid, quantity, seri, priceimport)
 VALUES 
   (77, 43, 128, 2, '[864209753, 112233445]', 699.00),
   (78, 43, 126, 2, '[157482936, 294785613]', 799.00),

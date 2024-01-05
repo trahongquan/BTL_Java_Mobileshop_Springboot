@@ -20,9 +20,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     /** Config datasource security*/
-      @Autowired //world wide
-        // add a reference to our security data source
-        @Qualifier("securityDataSource")
+      @Autowired //world wide // add a reference to our security data source
+        @Qualifier("appDataSource")
         private DataSource securityDataSource;
         @Override
         protected void configure (AuthenticationManagerBuilder auth) throws Exception {

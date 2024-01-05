@@ -391,6 +391,7 @@ public class PhoneController {
         existingPhone.setStorageCapacity(updatedPhone.getStorageCapacity());
         existingPhone.setRam(updatedPhone.getRam());
         existingPhone.setOperatingSystem(updatedPhone.getOperatingSystem());
+        existingPhone.setPrice(updatedPhone.getPrice());
         existingPhone.setColor(updatedPhone.getColor());
         existingPhone.setSeri(updatedPhone.getSeri());
         existingPhone.setQuantity(new StringToList().StringToList(updatedPhone.getSeri()).size());
