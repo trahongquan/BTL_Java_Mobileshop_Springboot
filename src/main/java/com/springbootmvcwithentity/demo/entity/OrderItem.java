@@ -1,11 +1,7 @@
 package com.springbootmvcwithentity.demo.entity;
 
-import lombok.Data;
-
 import javax.persistence.*;
-import java.util.List;
 
-@Data
 @Entity
 @Table(name = "orderitems")
 public class OrderItem {

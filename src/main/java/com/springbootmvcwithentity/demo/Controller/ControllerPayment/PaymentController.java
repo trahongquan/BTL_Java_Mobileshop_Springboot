@@ -14,7 +14,7 @@ import com.springbootmvcwithentity.demo.service.Users.UserService;
 import com.springbootmvcwithentity.demo.service.authority.AuthorityService;
 import com.springbootmvcwithentity.demo.service.order.orderService;
 import com.springbootmvcwithentity.demo.service.orderitem.orderitemsService;
-import lombok.Data;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

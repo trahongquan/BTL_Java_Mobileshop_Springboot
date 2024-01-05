@@ -1,10 +1,8 @@
 package com.springbootmvcwithentity.demo.entity;
 
-import lombok.Data;
-
 import javax.persistence.*;
 
-@Data
+
 @Entity
 @Table(name = "orders")
 public class Order {

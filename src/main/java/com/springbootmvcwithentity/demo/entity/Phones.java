@@ -1,10 +1,9 @@
 package com.springbootmvcwithentity.demo.entity;
     import com.fasterxml.jackson.annotation.JsonProperty;
-    import lombok.Data;
 
     import javax.persistence.*;
 
-@Data
+
 @Entity
 @Table(name = "Phones")
 public class Phones {
