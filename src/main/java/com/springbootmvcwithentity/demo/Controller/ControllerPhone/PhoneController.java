@@ -280,10 +280,10 @@ public class PhoneController {
                     String dateProcessed = orderservice.findById(orderitemDTO.getOrderID()).getDateProcessed();
                     if (invertCondition) {
                         // Nếu invertCondition là true, đảo ngược điều kiện
-                        return (stringFilter1.equals(dateProcessed) || stringFilter2.equals(dateProcessed));
+                        return (stringFilter1.equals(dateProcessed) || stringFilter2.equals(dateProcessed)||dateProcessed==null);
                     } else {
                         // Ngược lại, sử dụng điều kiện như trước
-                        return !(stringFilter1.equals(dateProcessed) || stringFilter2.equals(dateProcessed));
+                        return !(stringFilter1.equals(dateProcessed) || stringFilter2.equals(dateProcessed)||dateProcessed==null);
                     }
                 })
                 .collect(Collectors.toList());
@@ -308,8 +308,6 @@ public class PhoneController {
         List<OrderitemDTO> orderitemDTOS = orderItems2orderitemDTOS(orderItems);
         List<OrderitemDTO> orderitemDTOFilter = filterDateProcess(orderitemDTOS,"0000-00-00 00:00:00", "", true);
         List<String> orderdate = GetDateProcess(orderitemDTOFilter);
-        boolean soldphones = false;
-        boolean soldPhonesWait = true;
         model.addAttribute("orderitemDTOS", orderitemDTOFilter); /** cách xử lý ở backEnd*/
         model.addAttribute("orderdate", orderdate); /** cách xử lý ở backEnd*/
         model.addAttribute("soldphones", false); /** cách xử lý ở backEnd*/
@@ -583,9 +581,13 @@ public class PhoneController {
         });
 
         LinkedList<OrderDTO> orderDTOsApprove = new LinkedList<>(orderDTOs);
-        List<OrderDTO> orderDTOsApprovefilter = orderDTOsApprove.stream().filter(item -> item.getDateProcessed().equals("0000-00-00 00:00:00")).collect(Collectors.toList());
+//        List<OrderDTO> orderDTOsApprovefilter = orderDTOsApprove.stream().filter(item -> item.getDateProcessed().equals("0000-00-00 00:00:00")).collect(Collectors.toList());
+        List<OrderDTO> orderDTOsApprovefilter = orderDTOsApprove.stream()
+                .filter(item -> item.getDateProcessed() == null || item.getDateProcessed().equals("0000-00-00 00:00:00"))
+                .collect(Collectors.toList());
+
         LinkedList<OrderDTO> orderDTOsNotApprove = new LinkedList<>(orderDTOs);
-        List<OrderDTO> orderDTOsNotApprovefilter = orderDTOsNotApprove.stream().filter(item -> !item.getDateProcessed().equals("0000-00-00 00:00:00")).collect(Collectors.toList());
+        List<OrderDTO> orderDTOsNotApprovefilter = orderDTOsNotApprove.stream().filter(item -> item.getDateProcessed() != null && !item.getDateProcessed().equals("0000-00-00 00:00:00")).collect(Collectors.toList());
 
 
         model.addAttribute("orderDTOsApprovefilter", orderDTOsApprovefilter);
