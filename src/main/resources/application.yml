@@ -12,7 +12,11 @@ spring:
         baseline-on-migrate: true  # Sửa lỗi: baselineOnMigrate thành baseline-on-migrate
         sql-migration-prefix: V  # Sửa lỗi: sqlMigrationPrefix thành sql-migration-prefix
         schemas: public
-
+    thymeleaf:
+        prefix: classpath:/templates/  # Đường dẫn đến thư mục chứa các tệp mẫu Thymeleaf
+        suffix: .html  # Hậu tố của các tệp mẫu Thymeleaf
+        mode: HTML5  # Chế độ HTML được sử dụng
+        cache: false  # Tắt bộ nhớ đệm Thymeleaf trong quá trình phát triển (có thể bật khi triển khai)
     jpa:
         hibernate:
             naming:
