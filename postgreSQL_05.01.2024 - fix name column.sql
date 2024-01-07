@@ -209,7 +209,7 @@ INSERT INTO authorities (username, authority) VALUES
 
 
 
-INSERT INTO phones (phoneid, brandid, categoryid, model, phonename, releaseyear, screensize, storagecapacity, ram, operatingsystem, price, color, imagename, quantity, seri) VALUES
+INSERT INTO phones (phoneid, brandid, categoryid, phonename, model, releaseyear, screensize, storagecapacity, ram, operatingsystem, price, color, imagename, quantity, seri) VALUES
 (126, 2, 1, 'iphone 14', 'iphone 14-2022-128-8-Black', 2022, 6.30, 128, 8, 'IOS', 799.00, 'Black', 'iphone 14 black.png', 0, '[]'),
 (127, 1, 2, 'Samsung Galaxy S20', 'Samsung Galaxy S20-2020-256-8-Blue', 2020, 6.20, 256, 8, 'Android', 699.00, 'Blue', 'Samsung Galaxy Note 20 Mystic Bronze.png', 1, '[112569965]'),
 (128, 3, 1, 'OnePlus 9', 'OnePlus 9-2021-128-8-White', 2021, 6.50, 128, 8, 'Android', 699.00, 'White', 'oneplus 9-white.png', 0, '[]'),
