@@ -21,7 +21,8 @@
 <br>
 <br>
 <br>
-<div th:replace="/templates/test/banner.html::banner"></div>
+<div th:replace="/test/banner.html :: banner"></div>
+
 <div >
     <section class="phone-list">
         <div class="phone-item" th:each="phone,iter:${phoneDTOS}"> <!--Dùng DTO để xử lsy tại backend-->
@@ -36,7 +37,7 @@
                 <strong><p class="price" th:text="@{'Giá: ' + '$'+ ${phone.getPrice}}"></p></strong>
                 <p th:text="'Mô tả: Chiếc điện thoại thông minh từ ' + ${phone.getBrand.getBrandName}"></p>
                 <p th:text="'Phiên bản: ' + ${phone.getStorageCapacity} + 'GB | ' + ${phone.getRam} + 'GB' " style="color: red; font-weight: bold"></p>
-                    <p th:if="${phone.getQuantity==0}" th:text="'Đang hết hàng'"></p>
+                <p th:if="${phone.getQuantity==0}" th:text="'Đang hết hàng'"></p>
             </a>
                 <a th:href="@{'/Handshop/cart?Id='+ ${phone.phoneId}}">
                 <button>Mua Ngay
